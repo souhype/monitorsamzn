@@ -1,0 +1,76 @@
+{{block "index" .}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="description" content="Content" />
+   <link rel="stylesheet" href="/public/style.css" />
+   <title>Title</title>
+</head>
+
+<body>
+   <header>
+      <h1>Top-Selling Monitors on Amazon Across Various Regions</h1>
+      <p>Total Products: <i>{{.Count}}</i> - Last Updated: <i>{{.Timestamp}}</i></p>
+   </header>
+
+   <form name="form" hx-get="/?template=products" hx-target="main" hx-trigger="input changed delay:500ms, search">
+      <input type="search" placeholder="Search: '144hz ips'" name="search" />
+      <select name="order">
+         <option selected value="">Order By</option>
+         <option value="price asc">Lowest Price</option>
+         <option value="usedPrice asc">Lowest Used Price</option>
+         <option value="save desc">Highest Savings</option>
+         <option value="rating desc">Highest Rating</option>
+         <option value="reviews desc">Most Reviews</option>
+         <option value="sales desc">Most Sales</option>
+      </select>
+      </form>
+
+
+   <main>
+      {{block "products" .}} {{range $index, $item := .Products}} {{if eq $index 9}}
+      <article hx-get="/?offset={{$item.ID}}&template=products" hx-swap="afterend" hx-trigger="revealed"
+         hx-include="[name='form']">
+         {{else}}
+         <article>
+            {{end}}
+            <img class="productIMG" alt="{{$item.Name}}" src="/public/imgs/products/{{$item.Name}}.jpg" />
+            <a href="{{$item.Url}}" target="_blank"><strong>{{$item.Title}}</strong></a>
+            <section>
+               <span>Region <img title="Sourced from amazon.{{$item.Region}}" alt="{{$item.Region}}.png" class="flag"
+                     src="/public/imgs/flags/{{$item.Region}}.png" /></span>
+               <span>New <strong class="price" data-price="{{$item.Price}}">{{$item.Price}} €</strong></span>
+               <span>Used <strong class="price" data-price="{{$item.UsedPrice}}">{{$item.UsedPrice}} €</strong></span>
+               <span>Save <strong>{{$item.Save}} %</strong></span>
+               {{ if ge $item.Rating 4.5 }}
+               <span>Ratings <strong>{{$item.Rating}}/5 🔥</strong></span>
+               {{ else }}
+               <span>Ratings <strong>{{$item.Rating}}/5</strong></span>
+               {{ end }}
+               <span>Reviews <strong class="reviews" data-reviews="{{$item.Reviews}}">{{$item.Reviews}}</strong></span>
+               <span title="Sales in the last 30 days">Sales <strong class="sales"
+                     data-sales="{{$item.Sales}}">{{$item.Sales}}</strong></span>
+            </section>
+            <br />
+         </article>
+         {{end}} {{end}}
+   </main>
+</div>
+
+   <footer>
+      <p>
+         <small>This website is not affiliated with, endorsed by, or sponsored by Amazon.com, Inc. or any of its
+            subsidiaries. All product names, logos, and brands are property of their respective owners. No commision is
+            paid on any sale.</small>
+      </p>
+   </footer>
+
+   <script src="/public/htmx.js"></script>
+   <script src="/public/mini.js"></script>
+</body>
+
+</html>
+{{end}}

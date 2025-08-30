@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/bun": "^1.2.21",
+    "puppeteer-core": "^24.17.1"
+  }
+}
