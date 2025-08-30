@@ -1,6 +1,6 @@
 {
   "routes": [
-    { "src": "/static/(.*)", "dest": "api/public/$1" },
+    { "src": "/static/(.*)", "dest": "public/$1" },
     { "src": "/", "dest": "api/index.go" }
   ],
   "public": true
