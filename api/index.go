@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"database/sql"
@@ -11,6 +11,12 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+//go:embed templates/*
+var t embed.FS
+
+//go:embed db.sqlite
+var dbFile embed.FS
 
 type Data struct {
 	Products  []*Product
@@ -117,7 +123,7 @@ func getData(params QueryParams) Data {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./templates/index.html"))
+	tmpl, _ := template.ParseFS(t, "templates/*")
 
 	templateName := r.URL.Query().Get("template")
 	queries := strings.Split(r.URL.Query().Get("search"), " ")
@@ -133,11 +139,13 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 	data := getData(QueryParams{Queries: queries, Offset: offset, OrderBy: order, StartIndex: startIndex})
 
+	w.Header().Set("Content-Type", "text/html")
 	tmpl.ExecuteTemplate(w, templateName, Data{Products: data.Products, Count: data.Count, Timestamp: data.Timestamp})
 }
 
-func main() {
-	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
-	http.HandleFunc("/", index)
-	log.Fatal(http.ListenAndServe("localhost:5000", nil))
-}
+// vercel serverless
+// func main() {
+// 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
+// 	http.HandleFunc("/", index)
+// 	log.Fatal(http.ListenAndServe("localhost:5000", nil))
+// }
