@@ -1,9 +1,10 @@
-package handler
+package main
 
 import (
 	"database/sql"
 	"embed"
 	"fmt"
+	"os"
 	"html/template"
 	"log"
 	"net/http"
@@ -169,6 +170,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 // vercel serverless
 // func main() {
 // 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
-// 	http.HandleFunc("/", index)
+// 	http.HandleFunc("/", Handler)
 // 	log.Fatal(http.ListenAndServe("localhost:5000", nil))
 // }
