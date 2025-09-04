@@ -2,6 +2,8 @@ package handler
 
 import (
 	"database/sql"
+	"embed"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -94,7 +96,28 @@ func buildQuery(params QueryParams) (string, []interface{}) {
 }
 
 func getData(params QueryParams) Data {
-	db, _ := sql.Open("sqlite3", "db.sqlite")
+	tempFile, err := os.CreateTemp("", "db-*.sqlite")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.Remove(tempFile.Name())
+
+	// Write the embedded database to the temporary file
+	dbData, err := dbFile.ReadFile("db.sqlite")
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = tempFile.Write(dbData)
+	if err != nil {
+		log.Fatal(err)
+	}
+	tempFile.Close()
+
+	db, err := sql.Open("sqlite3", tempFile.Name())
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
 
 	queryString, queryParams := buildQuery(params)
 
@@ -122,7 +145,7 @@ func getData(params QueryParams) Data {
 	}
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ := template.ParseFS(t, "templates/*")
 
 	templateName := r.URL.Query().Get("template")
