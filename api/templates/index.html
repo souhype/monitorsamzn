@@ -6,7 +6,7 @@
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <meta name="description" content="Content" />
-   <link rel="stylesheet" href="/public/style.css" />
+   <link rel="stylesheet" href="/style.css" />
    <title>Title</title>
 </head>
 
@@ -37,11 +37,11 @@
          {{else}}
          <article>
             {{end}}
-            <img class="productIMG" alt="{{$item.Name}}" src="/public/imgs/products/{{$item.Name}}.jpg" />
+            <img class="productIMG" alt="{{$item.Name}}" src="/imgs/products/{{$item.Name}}.jpg" />
             <a href="{{$item.Url}}" target="_blank"><strong>{{$item.Title}}</strong></a>
             <section>
                <span>Region <img title="Sourced from amazon.{{$item.Region}}" alt="{{$item.Region}}.png" class="flag"
-                     src="/public/imgs/flags/{{$item.Region}}.png" /></span>
+                     src="/imgs/flags/{{$item.Region}}.png" /></span>
                <span>New <strong class="price" data-price="{{$item.Price}}">{{$item.Price}} €</strong></span>
                <span>Used <strong class="price" data-price="{{$item.UsedPrice}}">{{$item.UsedPrice}} €</strong></span>
                <span>Save <strong>{{$item.Save}} %</strong></span>
@@ -68,8 +68,8 @@
       </p>
    </footer>
 
-   <script src="/public/htmx.js"></script>
-   <script src="/public/mini.js"></script>
+   <script src="/htmx.js"></script>
+   <script src="/mini.js"></script>
 </body>
 
 </html>
